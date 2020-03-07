@@ -1,53 +1,47 @@
 package com.vannak.tech.api_project.service
 
-import com.vannak.tech.api_project.api.exception.IDNotFoundException
-import com.vannak.tech.api_project.domain.model.Role
 import com.vannak.tech.api_project.domain.model.User
-import org.springframework.http.ResponseEntity
+import com.vannak.tech.api_project.repository.RoleRepository
+import com.vannak.tech.api_project.repository.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 @Component
-class UserService {
-//    private var users : MutableList<User> = mutableListOf<User>()
-private var users : ArrayList<User> = ArrayList()
-    private var userCount:Int=3;
-//    init {
-//        users.add(User(1, "User 1", Date(), "+85512345678", "test1@gmail.com"))
-//        users.add(User(2, "User 2", Date(), "+855962867484", "test2@gmail.com"))
-//        users.add(User(3, "User 3", Date(), "+85521212122", "test3@gmail.com"))
-//    }
+class UserService(
+        @Autowired var userRepository: UserRepository
+) {
 
-    fun findAll(): ResponseEntity<Any>{
-        return ResponseEntity.ok(users)
+    fun getAllUser(): List<User>{
+        return userRepository.findAll()
     }
 
-    fun save(user: User): User {
-        if (user.getId()==0){
-            user.setId(++userCount)
-        }
-        users.add(user)
-        return user
+    fun getUserById(id: Int): User{
+        return userRepository.findById(id).get()
     }
 
-    fun findOne(id:Int): User {
-        for (user in users){
-            if (user.getId()==id){
-                return user
-            }
-        }
-        throw IDNotFoundException("userId")
+    fun createUser(user: User): User{
+        return userRepository.save(user)
     }
 
-    fun deleteById(id: Int): User {
-        var itr = users.iterator()
-        val user = itr.next()
-        while (itr.hasNext()){
-            itr.remove()
-            return user
-        }
-        return null!!
+    fun deleteUserById(id: Int): String{
+        userRepository.deleteById(id)
+        return "Delete Succeed"
+    }
+
+    fun findUserByValue(value: String): Optional<List<User>>{
+        return userRepository.findByValue(value)
+    }
+
+    fun getUserByPage(page: Int): Page<User> {
+        return userRepository.findAll(PageRequest.of(page,5))
+    }
+
+    fun getUserByRoleId(id: Int): Optional<List<User>> {
+        return userRepository.findUserByRoleId(id)
     }
 
 }

@@ -15,7 +15,6 @@ class Role(id: Int, type: String) {
     @Column(name = "type")
     private var type: String? = type
 
-
     fun getId(): Int? {
         return this.id
     }
@@ -24,7 +23,6 @@ class Role(id: Int, type: String) {
         this.id = id
     }
 
-
     fun getType(): String?{
         return this.type
     }
@@ -32,13 +30,5 @@ class Role(id: Int, type: String) {
     fun setType(type: String): Unit{
         this.type = type
     }
-
-//    fun getUser(): List<User>?{
-//        return this.users
-//    }
-//
-//    fun setUser(users: List<User>): Unit{
-//        this.users = users
-//    }
 
 }

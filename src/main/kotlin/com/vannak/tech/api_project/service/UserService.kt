@@ -52,9 +52,6 @@ class UserService(
         val user = userRepository.findById(id).orElseThrow{
             throw  IDNotFoundException("userID")
         }
-//        val role = roleRepository.findById(user.role.id).orElseThrow {
-//            throw IDNotFoundException("roleID")
-//        }
         val role = if (updateUserDTO.role == null)
                         roleRepository.findById(user.role.id).orElseThrow{
                             throw IDNotFoundException("roleID")

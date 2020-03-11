@@ -5,13 +5,14 @@ import javax.persistence.*
 
 
 @Entity
-class Role(id: Long, type: String) {
+@Table(name = "roles")
+data class Role(
 
     @Id
     @GeneratedValue
     @Column(name = "id")
-    var id: Long = id
+    var id: Long = 0,
 
     @Column(name = "type")
-    var type: String? = type
-}
+    var type: String
+)

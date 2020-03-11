@@ -4,6 +4,9 @@ package com.vannak.tech.api_project.domain.model
 import com.vannak.tech.api_project.api.request.CreateUserDTO
 import com.vannak.tech.api_project.api.request.UpdateUserDTO
 import com.vannak.tech.api_project.api.request.UserDTO
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -26,7 +29,15 @@ data class User (
 
         @Email
         @Column(name = "email")
-        var email : String
+        var email : String,
+
+        @CreationTimestamp
+        @Column(name ="createdAt")
+        var createdAt: LocalDateTime = LocalDateTime.now(),
+
+        @UpdateTimestamp
+        @Column(name = "updatedAt")
+        var updatedAt: LocalDateTime = LocalDateTime.now()
 ){
     @ManyToOne
     @JoinColumn(name= "role_id")

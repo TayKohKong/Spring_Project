@@ -1,47 +1,98 @@
 package com.vannak.tech.api_project.service
 
+import com.vannak.tech.api_project.api.exception.IDNotFoundException
+import com.vannak.tech.api_project.api.request.CreateUserDTO
+import com.vannak.tech.api_project.api.request.UpdateUserDTO
+import com.vannak.tech.api_project.api.request.UserDTO
+import com.vannak.tech.api_project.domain.model.Role
 import com.vannak.tech.api_project.domain.model.User
 import com.vannak.tech.api_project.repository.RoleRepository
 import com.vannak.tech.api_project.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
-import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Component
 class UserService(
-        @Autowired var userRepository: UserRepository
+        @Autowired var userRepository: UserRepository,
+        @Autowired var roleRepository: RoleRepository
 ) {
 
-    fun getAllUser(): List<User>{
-        return userRepository.findAll()
+    fun getAllUser(): ResponseEntity<List<UserDTO>> {
+        val users = userRepository.findAll()
+        val listUserDTO = ArrayList<UserDTO>()
+        users.forEach {
+            listUserDTO.add(it.toDTO())
+        }
+        return ResponseEntity.ok(listUserDTO)
     }
 
-    fun getUserById(id: Int): User{
-        return userRepository.findById(id).get()
+    fun getUserById(id: Long): ResponseEntity<Any> {
+        return ResponseEntity.ok(userRepository.findById(id).get().toDTO())
     }
 
-    fun createUser(user: User): User{
-        return userRepository.save(user)
+    fun createUser(userDTO: CreateUserDTO): ResponseEntity<Any>{
+        var role = roleRepository.findById(userDTO.role).orElseThrow{
+            throw IDNotFoundException("roleID")
+        }
+        val user = User.fromDTO(userDTO, role)
+        return ResponseEntity.ok(userRepository.save(user).toDTO())
     }
 
-    fun deleteUserById(id: Int): String{
+    fun deleteUserById(id: Long): ResponseEntity<String>{
         userRepository.deleteById(id)
-        return "Delete Succeed"
+        return ResponseEntity.ok("Deleted Succeed")
     }
 
-    fun findUserByValue(value: String): Optional<List<User>>{
-        return userRepository.findByValue(value)
+    fun updateUser(updateUserDTO: UpdateUserDTO, id: Long):ResponseEntity<Any>{
+        val user = userRepository.findById(id).orElseThrow{
+            throw  IDNotFoundException("userID")
+        }
+//        val role = roleRepository.findById(user.role.id).orElseThrow {
+//            throw IDNotFoundException("roleID")
+//        }
+        val role = if (updateUserDTO.role == null)
+                        roleRepository.findById(user.role.id).orElseThrow{
+                            throw IDNotFoundException("roleID")
+                        }
+                    else roleRepository.findById(updateUserDTO.role!!).orElseThrow {
+                            throw IDNotFoundException("roleID")
+                        }
+        val updatedUser = User.fromDTO(updateUserDTO,role ,user)
+        return ResponseEntity.ok(userRepository.save(updatedUser).toDTO())
     }
 
-    fun getUserByPage(page: Int): Page<User> {
-        return userRepository.findAll(PageRequest.of(page,5))
+
+    fun findUserByValue(value: String): ResponseEntity<List<UserDTO>> {
+        val users = userRepository.findByValue(value)
+        val listUserDTO = ArrayList<UserDTO>()
+        users.let {
+            it.get().forEach{
+                listUserDTO.add(it.toDTO())
+            }
+        }
+        return ResponseEntity.ok(listUserDTO)
     }
 
-    fun getUserByRoleId(id: Int): Optional<List<User>> {
-        return userRepository.findUserByRoleId(id)
+    fun getUserByPage(page: Int): ResponseEntity<Page<UserDTO>> {
+        return ResponseEntity.ok(userRepository.findAll(PageRequest.of(page,5)).map {
+            it.toDTO()
+        })
+    }
+
+    fun getUserByRoleId(id: Long): ResponseEntity<List<UserDTO>>{
+        val users = userRepository.findUserByRoleId(id)
+        val listUserDTO = ArrayList<UserDTO>()
+        users.let {
+            it.get().forEach {
+                listUserDTO.add(it.toDTO())
+            }
+        }
+        return ResponseEntity.ok(listUserDTO)
     }
 
 }

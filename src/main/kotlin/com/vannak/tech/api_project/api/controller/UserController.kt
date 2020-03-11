@@ -1,6 +1,9 @@
 package com.vannak.tech.api_project.api.controller
 
 import com.vannak.tech.api_project.api.exception.IDNotFoundException
+import com.vannak.tech.api_project.api.request.CreateUserDTO
+import com.vannak.tech.api_project.api.request.UpdateUserDTO
+import com.vannak.tech.api_project.api.request.UserDTO
 import com.vannak.tech.api_project.domain.model.User
 import com.vannak.tech.api_project.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,50 +22,47 @@ class UserController(
 ) {
 
     @GetMapping("/all")
-    fun getAllUser(): ResponseEntity<List<User>>{
-        val users = userService.getAllUser()
-        return  ResponseEntity.ok(users)
+    fun getAllUser(): ResponseEntity<List<UserDTO>>{
+        return userService.getAllUser()
     }
 
     @GetMapping("/{id}")
-    fun retrieveUser(@PathVariable id:Int): ResponseEntity<User> {
-       val user =  userService.getUserById(id)
-        return ResponseEntity.ok(user)
+    fun retrieveUser(@PathVariable id:Long): ResponseEntity<Any> {
+        return userService.getUserById(id)
     }
 
     @PostMapping
-    fun createUser(@Valid @RequestBody user: User): ResponseEntity<User>{
-        var user = userService.createUser(user)
-        return ResponseEntity.ok(user)
+    fun createUser(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<Any>{
+        return userService.createUser(userDTO)
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id:Int): ResponseEntity<String> {
+    @DeleteMapping("/delete/{id}")
+    fun deleteUser(@PathVariable id:Long): ResponseEntity<String> {
         try {
-            val msg = userService.deleteUserById(id)
-            return ResponseEntity.ok(msg)
+            return userService.deleteUserById(id)
         } catch (e: RuntimeException){
             throw IDNotFoundException("userId")
         }
 
     }
 
+    @PutMapping("/update/{id}")
+    fun updateUser(@Valid @RequestBody updateUserDTO: UpdateUserDTO,@PathVariable id: Long): ResponseEntity<Any>{
+        return userService.updateUser(updateUserDTO,id)
+    }
+
     @GetMapping("/search")
-    fun findByValue(@RequestParam value: String): ResponseEntity<Optional<List<User>>> {
-        val users = userService.findUserByValue(value)
-        return ResponseEntity.ok(users)
+    fun findByValue(@RequestParam value: String): ResponseEntity<List<UserDTO>> {
+       return userService.findUserByValue(value)
     }
 
     @GetMapping("/page/{page}")
-    fun getByPage(@PathVariable page: Int): ResponseEntity<Page<User>> {
-        val user = userService.getUserByPage(page)
-        return ResponseEntity.ok(user)
+    fun getByPage(@PathVariable page: Int): ResponseEntity<Page<UserDTO>> {
+        return userService.getUserByPage(page)
     }
 
-
     @GetMapping("/role/{roleId}")
-    fun findByRoleId(@PathVariable roleId: Int): ResponseEntity<Optional<List<User>>>{
-        val users = userService.getUserByRoleId(roleId)
-        return ResponseEntity.ok(users)
+    fun findByRoleId(@PathVariable roleId: Long): ResponseEntity<List<UserDTO>>{
+        return userService.getUserByRoleId(roleId)
     }
 }

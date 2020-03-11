@@ -5,30 +5,13 @@ import javax.persistence.*
 
 
 @Entity
-class Role(id: Int, type: String) {
+class Role(id: Long, type: String) {
 
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private var id: Int? = id
+    var id: Long = id
 
     @Column(name = "type")
-    private var type: String? = type
-
-    fun getId(): Int? {
-        return this.id
-    }
-
-    fun setId(id: Int): Unit{
-        this.id = id
-    }
-
-    fun getType(): String?{
-        return this.type
-    }
-
-    fun setType(type: String): Unit{
-        this.type = type
-    }
-
+    var type: String? = type
 }

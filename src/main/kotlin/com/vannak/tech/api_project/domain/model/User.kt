@@ -1,62 +1,69 @@
 package com.vannak.tech.api_project.domain.model
 
 
+import com.vannak.tech.api_project.api.request.CreateUserDTO
+import com.vannak.tech.api_project.api.request.UpdateUserDTO
+import com.vannak.tech.api_project.api.request.UserDTO
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
 
 @Entity
-class User (id: Int, name: String, dob: Date, phoneNumber: String, email: String, role: Role){
+@Table(name = "users")
+data class User (
+        @Id @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        var id: Long = 0,
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private var id:Int = id
+        @Column(name = "name")
+        var name: String,
 
-    @Size(min = 2, message = "Size must be 2")
-    @Column(name = "name")
-    private var name: String = name
+        @Column(name = "dob")
+        var dob: Date,
 
-    @Past
-    @Column(name = "dob")
-    private var dob: Date = dob
+        @Column(name = "phone_number")
+        var phoneNumber: String,
 
-    @Pattern(regexp = "\\+855[0-9]{8}[0-9]?",message = "Phone number format is invalid")
-    @Column(name = "phoneNumber")
-    private var phoneNumber: String =phoneNumber;
-
-    @Email
-    @Column(name = "email")
-    private var email:String = email
-
+        @Email
+        @Column(name = "email")
+        var email : String
+){
     @ManyToOne
-    private var role: Role? = role
+    @JoinColumn(name= "role_id")
+    lateinit var role: Role
 
-    fun getId():Int{
-        return this.id;
-    }
-    fun getName(): String{
-        return this.name;
-    }
-    fun getDob(): Date{
-        return this.dob;
-    }
-    fun getPhoneNumber(): String{
-        return this.phoneNumber
-    }
-    fun getEmail():String{
-        return this.email
-    }
+    fun toDTO() : UserDTO = UserDTO(
+            id = id,
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            dob = dob.toString(),
+            role = role.id
+    )
 
-    fun setId(id:Int): Unit{
-        this.id=id
-    }
+    companion object{
+        fun fromDTO(dto : CreateUserDTO, role : Role) : User{
+            val user = User(
+                    name = dto.name,
+                    email = dto.email,
+                    phoneNumber = dto.phoneNumber,
+                    dob = dto.dob
+            )
+            user.role = role
+            return user
+        }
 
-    fun getRole(): Role? {
-        return role
-    }
-    
-    fun setRole(role: Role): Unit{
-        this.role = role
+        fun fromDTO(newDTO: UpdateUserDTO, role: Role?, oldUser: User): User{
+            val user = User(
+                    id = oldUser.id,
+                    name = newDTO.name?: oldUser.name,
+                    email = newDTO.email?: oldUser.email,
+                    phoneNumber = newDTO.phoneNumber?: oldUser.phoneNumber,
+                    dob = newDTO.dob?: oldUser.dob
+            )
+
+            user.role = role!!
+            return user
+        }
     }
 }

@@ -15,7 +15,6 @@ class EntityExceptionHandler{
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    //Start
     @ExceptionHandler(Exception::class)
     final fun handleAllExceptions(e : Exception, request:WebRequest): ResponseEntity<ErrorResponse>{
         logger.info("Error Log", e)
@@ -45,14 +44,5 @@ class EntityExceptionHandler{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
 
     }
-//
-//    @Override
-//    internal fun handleMethodArgumentNotValid(
-//            ex: MethodArgumentNotValidException, headers: HttpHeaders?, status: HttpStatus?, request: WebRequest): ResponseEntity<Any?>? {
-//
-//        var exceptionResponse:ExceptionResponse=ExceptionResponse(Date(),
-//                ex.message,
-//                ex.bindingResult.toString())
-//        return handleExceptionInternal(ex, exceptionResponse, headers!!, HttpStatus.BAD_REQUEST, request!!)
-//    }
+
 }

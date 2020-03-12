@@ -1,53 +1,80 @@
 package com.vannak.tech.api_project.domain.model
 
+
+import com.vannak.tech.api_project.api.request.CreateUserDTO
+import com.vannak.tech.api_project.api.request.UpdateUserDTO
+import com.vannak.tech.api_project.api.request.UserDTO
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import java.util.*
-import javax.annotation.processing.Generated
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.validation.constraints.Email
-import javax.validation.constraints.Past
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Size
-import kotlin.math.min
+import javax.persistence.*
+import javax.validation.constraints.*
 
 @Entity
-class User (id:Int,name:String,dob:Date,phoneNumber: String,email:String){
+@Table(name = "users")
+data class User (
+        @Id @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        var id: Long = 0,
 
-    @Id
-    @Generated
-    private var id:Int = id
-    @Size(min = 2, message = "Size must be 2")
-    private var name: String = name
-    @Past
-    private var dob: Date = dob
+        @Column(name = "name")
+        var name: String,
 
-    @Pattern(regexp = "\\+855[0-9]{8}[0-9]?",message = "Phone number format is invalid")
-    private var phoneNumber: String =phoneNumber;
+        @Column(name = "dob")
+        var dob: Date,
 
-    @Email
-    private var email:String = email
+        @Column(name = "phone_number")
+        var phoneNumber: String,
 
+        @Email
+        @Column(name = "email")
+        var email : String,
 
+        @CreationTimestamp
+        @Column(name ="createdAt")
+        var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    fun getId():Int{
-        return this.id;
+        @UpdateTimestamp
+        @Column(name = "updatedAt")
+        var updatedAt: LocalDateTime = LocalDateTime.now()
+){
+    @ManyToOne
+    @JoinColumn(name= "role_id")
+    lateinit var role: Role
+
+    fun toDTO() : UserDTO = UserDTO(
+            id = id,
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            dob = dob.toString(),
+            role = role.id
+    )
+
+    companion object{
+        fun fromDTO(dto : CreateUserDTO, role : Role) : User{
+            val user = User(
+                    name = dto.name,
+                    email = dto.email,
+                    phoneNumber = dto.phoneNumber,
+                    dob = dto.dob
+            )
+            user.role = role
+            return user
+        }
+
+        fun fromDTO(newDTO: UpdateUserDTO, role: Role?, oldUser: User): User{
+            val user = User(
+                    id = oldUser.id,
+                    name = newDTO.name?: oldUser.name,
+                    email = newDTO.email?: oldUser.email,
+                    phoneNumber = newDTO.phoneNumber?: oldUser.phoneNumber,
+                    dob = newDTO.dob?: oldUser.dob
+            )
+
+            user.role = role!!
+            return user
+        }
     }
-    fun getName(): String{
-        return this.name;
-    }
-    fun getDob(): Date{
-        return this.dob;
-    }
-    fun getPhoneNumber(): String{
-        return this.phoneNumber
-    }
-    fun getEmail():String{
-        return this.email
-    }
-
-    fun setId(id:Int): Unit{
-        this.id=id;
-    }
-
-
 }

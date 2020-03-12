@@ -15,6 +15,7 @@ fun main(args: Array<String>) {
 	runApplication<ApiProjectApplication>(*args)
 }
 
+
 //@Bean
 //fun localResolver():LocaleResolver{
 //	var localeResolver:SessionLocaleResolver= SessionLocaleResolver()

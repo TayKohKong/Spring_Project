@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project
+package com.tay.tech.api_project
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -14,18 +14,3 @@ class ApiProjectApplication
 fun main(args: Array<String>) {
 	runApplication<ApiProjectApplication>(*args)
 }
-
-
-//@Bean
-//fun localResolver():LocaleResolver{
-//	var localeResolver:SessionLocaleResolver= SessionLocaleResolver()
-//	localeResolver.setDefaultLocale(Locale.US)
-//	return localeResolver
-//}
-//
-//@Bean
-//fun bundleMessageSource(): ResourceBundleMessageSource{
-//	var messageSource:ResourceBundleMessageSource= ResourceBundleMessageSource()
-//	messageSource.setBasename("messages")
-//	return messageSource
-//}

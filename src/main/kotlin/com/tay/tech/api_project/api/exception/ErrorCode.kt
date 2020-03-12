@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project.api.exception
+package com.tay.tech.api_project.api.exception
 
 enum class ErrorCode(val code : Int, val message : String) {
     URL_NOT_FOUND(1, "URL NOT FOUND"),

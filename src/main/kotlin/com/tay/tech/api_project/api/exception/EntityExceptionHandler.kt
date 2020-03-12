@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project.api.exception
+package com.tay.tech.api_project.api.exception
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

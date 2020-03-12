@@ -1,18 +1,19 @@
-package com.vannak.tech.api_project.service
+package com.tay.tech.api_project.service
 
-import com.vannak.tech.api_project.api.exception.IDNotFoundException
-import com.vannak.tech.api_project.api.request.CreateUserDTO
-import com.vannak.tech.api_project.api.request.UpdateUserDTO
-import com.vannak.tech.api_project.api.request.UserDTO
-import com.vannak.tech.api_project.domain.model.Role
-import com.vannak.tech.api_project.domain.model.User
-import com.vannak.tech.api_project.repository.RoleRepository
-import com.vannak.tech.api_project.repository.UserRepository
+import com.tay.tech.api_project.api.exception.IDNotFoundException
+import com.tay.tech.api_project.api.request.CreateUserDTO
+import com.tay.tech.api_project.api.request.UpdateUserDTO
+import com.tay.tech.api_project.api.request.UserDTO
+import com.tay.tech.api_project.domain.model.Role
+import com.tay.tech.api_project.domain.model.User
+import com.tay.tech.api_project.repository.RoleRepository
+import com.tay.tech.api_project.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import java.lang.RuntimeException
 import kotlin.collections.ArrayList
 
 
@@ -44,17 +45,18 @@ class UserService(
     }
 
     fun deleteUserById(id: Long): ResponseEntity<String>{
-        userRepository.deleteById(id)
-        return ResponseEntity.ok("Deleted Succeed")
+        try {
+            userRepository.deleteById(id)
+            return ResponseEntity.ok("Deleted User Succeed")
+        } catch (e: RuntimeException){
+            throw IDNotFoundException("userId")
+        }
     }
 
     fun updateUser(updateUserDTO: UpdateUserDTO, id: Long):ResponseEntity<Any>{
         val user = userRepository.findById(id).orElseThrow{
             throw  IDNotFoundException("userID")
         }
-//        val role = roleRepository.findById(user.role.id).orElseThrow {
-//            throw IDNotFoundException("roleID")
-//        }
         val role = if (updateUserDTO.role == null)
                         roleRepository.findById(user.role.id).orElseThrow{
                             throw IDNotFoundException("roleID")

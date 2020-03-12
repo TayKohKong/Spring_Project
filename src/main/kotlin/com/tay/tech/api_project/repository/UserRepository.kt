@@ -1,7 +1,7 @@
-package com.vannak.tech.api_project.repository
+package com.tay.tech.api_project.repository
 
-import com.vannak.tech.api_project.api.request.UserDTO
-import com.vannak.tech.api_project.domain.model.User
+import com.tay.tech.api_project.api.request.UserDTO
+import com.tay.tech.api_project.domain.model.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository

@@ -1,8 +1,8 @@
-package com.vannak.tech.api_project.api.controller
+package com.tay.tech.api_project.api.controller
 
-import com.vannak.tech.api_project.domain.model.Role
-import com.vannak.tech.api_project.repository.RoleRepository
-import com.vannak.tech.api_project.service.RoleService
+import com.tay.tech.api_project.domain.model.Role
+import com.tay.tech.api_project.repository.RoleRepository
+import com.tay.tech.api_project.service.RoleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

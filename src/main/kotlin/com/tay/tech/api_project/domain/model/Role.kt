@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project.domain.model
+package com.tay.tech.api_project.domain.model
 
 
 import javax.persistence.*
@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Role(
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     var id: Long = 0,
 

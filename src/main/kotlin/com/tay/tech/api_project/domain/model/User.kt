@@ -1,9 +1,9 @@
-package com.vannak.tech.api_project.domain.model
+package com.tay.tech.api_project.domain.model
 
 
-import com.vannak.tech.api_project.api.request.CreateUserDTO
-import com.vannak.tech.api_project.api.request.UpdateUserDTO
-import com.vannak.tech.api_project.api.request.UserDTO
+import com.tay.tech.api_project.api.request.CreateUserDTO
+import com.tay.tech.api_project.api.request.UpdateUserDTO
+import com.tay.tech.api_project.api.request.UserDTO
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
@@ -53,7 +53,7 @@ data class User (
     )
 
     companion object{
-        fun fromDTO(dto : CreateUserDTO, role : Role) : User{
+        fun fromDTO(dto : CreateUserDTO, role : Role) : User {
             val user = User(
                     name = dto.name,
                     email = dto.email,
@@ -64,13 +64,13 @@ data class User (
             return user
         }
 
-        fun fromDTO(newDTO: UpdateUserDTO, role: Role?, oldUser: User): User{
+        fun fromDTO(newDTO: UpdateUserDTO, role: Role?, oldUser: User): User {
             val user = User(
                     id = oldUser.id,
-                    name = newDTO.name?: oldUser.name,
-                    email = newDTO.email?: oldUser.email,
-                    phoneNumber = newDTO.phoneNumber?: oldUser.phoneNumber,
-                    dob = newDTO.dob?: oldUser.dob
+                    name = newDTO.name ?: oldUser.name,
+                    email = newDTO.email ?: oldUser.email,
+                    phoneNumber = newDTO.phoneNumber ?: oldUser.phoneNumber,
+                    dob = newDTO.dob ?: oldUser.dob
             )
 
             user.role = role!!

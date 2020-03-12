@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project.api.exception
+package com.tay.tech.api_project.api.exception
 
 import java.lang.RuntimeException
 

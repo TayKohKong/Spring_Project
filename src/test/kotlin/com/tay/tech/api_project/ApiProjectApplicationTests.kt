@@ -1,4 +1,4 @@
-package com.vannak.tech.api_project
+package com.tay.tech.api_project
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
